@@ -1,0 +1,7 @@
+name: astrbot_plugin_maomao_register
+desc: 通过AstrBot注册猫猫AI网站账号。用户对bot说"注册"即可注册账号，提供自己的QQ邮箱作为用户名。
+author: maomaosamaqwq
+version: 1.0.0
+repo: https://github.com/maomaosamaqwq/astrbot_plugin_maomao_register
+display_name: 猫猫注册插件
+short_desc: 注册猫猫AI网站账号
