@@ -13,7 +13,7 @@ from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api import logger
 
 # 后端API地址（网站后端的Cloudflare Worker）
-API_BASE_URL = "https://maomao-api.b35a90441d9dea81207b863b34b6516a.workers.dev"
+API_BASE_URL = "https://api.仙狐大人.我爱你"
 
 
 @register(
