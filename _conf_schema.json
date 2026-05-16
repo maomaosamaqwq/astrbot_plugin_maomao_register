@@ -1,0 +1,14 @@
+{
+  "api_base_url": {
+    "type": "string",
+    "title": "API地址",
+    "description": "猫猫AI网站后端的API地址",
+    "default": "https://api.仙狐大人.我爱你"
+  },
+  "api_key": {
+    "type": "string",
+    "title": "API密钥（可选）",
+    "description": "如果后端API需要鉴权，填写密钥。留空即可。",
+    "default": ""
+  }
+}

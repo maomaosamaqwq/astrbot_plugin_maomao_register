@@ -2,6 +2,8 @@
 猫猫AI网站注册插件 - AstrBot Plugin
 为AstrBot的LLM提供注册猫猫AI网站账号的工具。
 用户只需对bot说"我要注册"或者类似的话，LLM会自动调用注册工具。
+
+API密钥通过AstrBot WebUI配置，不会写死在代码里。
 """
 
 import re
@@ -9,9 +11,6 @@ import httpx
 from astrbot.api.star import Context, Star, register
 from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api import logger
-
-# 后端API地址（网站后端的Cloudflare Worker）
-API_BASE_URL = "https://api.仙狐大人.我爱你"
 
 
 @register(
@@ -26,6 +25,12 @@ class MaomaoRegisterPlugin(Star):
     def __init__(self, context: Context, config: dict = None):
         super().__init__(context)
         self.config = config or {}
+
+        # 从WebUI配置读取API信息
+        self.api_base_url = self.config.get("api_base_url", "https://api.仙狐大人.我爱你")
+        self.api_key = self.config.get("api_key", "")  # 如果后端需要鉴权
+
+        logger.info(f"注册插件已加载，API地址: {self.api_base_url}")
 
     @filter.llm_tool(name="register_website_account",
                      description="注册猫猫AI网站账号。用户需要提供密码，用户名会自动使用用户的QQ邮箱。"
@@ -53,16 +58,21 @@ class MaomaoRegisterPlugin(Star):
         if not re.match(r'^[^@]+@[^@]+\.[^@]+$', username):
             return f"生成的用户名格式异常：{username}，请联系管理员。"
 
-        logger.info(f"正在注册账号: {username}")
+        logger.info(f"正在注册账号: {username} -> {self.api_base_url}/register")
 
         try:
+            headers = {"Content-Type": "application/json"}
+            if self.api_key:
+                headers["Authorization"] = f"Bearer {self.api_key}"
+
             async with httpx.AsyncClient(timeout=15.0) as client:
                 resp = await client.post(
-                    f"{API_BASE_URL}/register",
+                    f"{self.api_base_url}/register",
                     json={
                         "username": username,
                         "password": pwd
-                    }
+                    },
+                    headers=headers
                 )
                 result = resp.json()
 
